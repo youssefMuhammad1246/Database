@@ -6,12 +6,12 @@ CREATE TABLE TEACHERS(
     First_Name VARCHAR(50) NOT NULL,
     Last_Name VARCHAR(50) NOT NULL,
     Email VARCHAR(50) UNIQUE,
-    Hire_Date DATE
+    Hire_Date DATE DEFAULT GETDATE()
 );
 
 CREATE TABLE LANGUAGES(
     Language_ID INT PRIMARY KEY,
-    Language_Name VARCHAR(50),
+    Language_Name VARCHAR(50) NOT NULL,
     Description VARCHAR(50)
 );
 
@@ -20,45 +20,47 @@ CREATE TABLE STUDENTS(
     First_Name VARCHAR(50) NOT NULL,
     Last_Name VARCHAR(50) NOT NULL,
     Email VARCHAR(50) UNIQUE,
-    Registration_Date DATE,
-    Date_of_Birth DATE
+    Registration_Date DATE NOT NULL,
+    Date_of_Birth DATE NOT NULL,
+    CONSTRAINT check_date_of_birth CHECK (Date_of_Birth >= '2005-01-01')
 );
 
 CREATE TABLE LEVELS(
     Level_ID INT PRIMARY KEY,
-    Level_Name VARCHAR(50),
-    Level_Number INT,
-    Language_ID INT,
+    Level_Name VARCHAR(50) NOT NULL,
+    Level_Number INT NOT NULL,
+    Language_ID INT NOT NULL,
     FOREIGN KEY (Language_ID) REFERENCES LANGUAGES(Language_ID)
 );
 
 CREATE TABLE TEACHER_PHONES(
-    Teacher_ID INT,
-    Phone VARCHAR(20),
+    Teacher_ID INT NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
     PRIMARY KEY (Teacher_ID , Phone),
     FOREIGN KEY (Teacher_ID) REFERENCES TEACHERS(Teacher_ID)
 );
 
 CREATE TABLE STUDENTS_PHONES(
-    Student_ID INT,
-    Phone VARCHAR(20),
+    Student_ID INT NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
     PRIMARY KEY(Student_ID , Phone),
     FOREIGN KEY (Student_ID) REFERENCES STUDENTS(Student_ID)
 );
 
 CREATE TABLE CLASSES(
     Class_ID INT PRIMARY KEY,
-    Class_Code VARCHAR(10),
-    Capacity INT,
-    Teacher_ID INT,
+    Class_Code VARCHAR(10) NOT NULL,
+    Capacity INT NOT NULL,
+    CONSTRAINT check_capacity CHECK (Capacity>=1),
+    Teacher_ID INT NOT NULL,
     FOREIGN KEY (Teacher_ID) REFERENCES TEACHERS(Teacher_ID),
-    Level_ID INT,
+    Level_ID INT NOT NULL,
     FOREIGN KEY (Level_ID) REFERENCES LEVELS(Level_ID)
 );
 
 CREATE TABLE CLASS_STUDENTS(
-    Class_ID INT,
-    Student_ID INT,
+    Class_ID INT NOT NULL,
+    Student_ID INT NOT NULL,
     PRIMARY KEY(Class_ID , Student_ID),
     FOREIGN KEY(Class_ID) REFERENCES CLASSES(Class_ID),
     FOREIGN KEY(Student_ID) REFERENCES STUDENTS(Student_ID)
@@ -66,10 +68,11 @@ CREATE TABLE CLASS_STUDENTS(
 
 CREATE TABLE PAYMENTS(
     Payment_ID INT PRIMARY KEY,
-    Student_ID INT,
+    Student_ID INT NOT NULL,
     FOREIGN KEY(Student_ID) REFERENCES STUDENTS(Student_ID),
     Amount DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT check_amount CHECK (Amount>0),
     Payment_Date DATE,
     Payment_Method VARCHAR(50),
-    Payment_Status VARCHAR(50)
+    Payment_Status VARCHAR(50) DEFAULT 'Unpaid'
 );
