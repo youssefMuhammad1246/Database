@@ -1,0 +1,75 @@
+CREATE DATABASE mySchool;
+USE mySchool;
+
+CREATE TABLE TEACHERS(
+    Teacher_ID INT PRIMARY KEY,
+    First_Name VARCHAR(50) NOT NULL,
+    Last_Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(50) UNIQUE,
+    Hire_Date DATE
+);
+
+CREATE TABLE LANGUAGES(
+    Language_ID INT PRIMARY KEY,
+    Language_Name VARCHAR(50),
+    Description VARCHAR(50)
+);
+
+CREATE TABLE STUDENTS(
+    Student_ID INT PRIMARY KEY,
+    First_Name VARCHAR(50) NOT NULL,
+    Last_Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(50) UNIQUE,
+    Registration_Date DATE,
+    Date_of_Birth DATE
+);
+
+CREATE TABLE LEVELS(
+    Level_ID INT PRIMARY KEY,
+    Level_Name VARCHAR(50),
+    Level_Number INT,
+    Language_ID INT,
+    FOREIGN KEY (Language_ID) REFERENCES LANGUAGES(Language_ID)
+);
+
+CREATE TABLE TEACHER_PHONES(
+    Teacher_ID INT,
+    Phone VARCHAR(20),
+    PRIMARY KEY (Teacher_ID , Phone),
+    FOREIGN KEY (Teacher_ID) REFERENCES TEACHERS(Teacher_ID)
+);
+
+CREATE TABLE STUDENTS_PHONES(
+    Student_ID INT,
+    Phone VARCHAR(20),
+    PRIMARY KEY(Student_ID , Phone),
+    FOREIGN KEY (Student_ID) REFERENCES STUDENTS(Student_ID)
+);
+
+CREATE TABLE CLASSES(
+    Class_ID INT PRIMARY KEY,
+    Class_Code VARCHAR(10),
+    Capacity INT,
+    Teacher_ID INT,
+    FOREIGN KEY (Teacher_ID) REFERENCES TEACHERS(Teacher_ID),
+    Level_ID INT,
+    FOREIGN KEY (Level_ID) REFERENCES LEVELS(Level_ID)
+);
+
+CREATE TABLE CLASS_STUDENTS(
+    Class_ID INT,
+    Student_ID INT,
+    PRIMARY KEY(Class_ID , Student_ID),
+    FOREIGN KEY(Class_ID) REFERENCES CLASSES(Class_ID),
+    FOREIGN KEY(Student_ID) REFERENCES STUDENTS(Student_ID)
+);
+
+CREATE TABLE PAYMENTS(
+    Payment_ID INT PRIMARY KEY,
+    Student_ID INT,
+    FOREIGN KEY(Student_ID) REFERENCES STUDENTS(Student_ID),
+    Amount DECIMAL(10, 2) NOT NULL,
+    Payment_Date DATE,
+    Payment_Method VARCHAR(50),
+    Payment_Status VARCHAR(50)
+);
