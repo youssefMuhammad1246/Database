@@ -9,8 +9,9 @@ The system uses Microsoft SQL Server to store and manage data efficiently throug
 - Youssef Muhammad
 - Adham Ebrahim
 - Ezz Eldin Ahmed
-- Baraa Hanafy
-- Youssef Elkhatedb
+- Al-Baraa Hanafy
+- Youssef Elkhateb
+- Ziad Ahmed
 
 
 ## Database Structure
